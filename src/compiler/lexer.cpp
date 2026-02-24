@@ -16,55 +16,50 @@ Token Lexer::consume() {
     Token token;
     char ch;
 
-    readFile.get(ch);
+    // skip any leading whitespace before reading a token
+    while (readFile.get(ch) && isspace(static_cast<unsigned char>(ch))) {
+        // loop until non-whitespace or EOF
+    }
 
-    if (readFile.eof()) {
-        token.type = Token::ERROR; // End of file
+    if (readFile.eof() || !readFile) {
+        token.type = Token::ERROR; // End of file or invalid stream
         return token;
-    } else if (std::isdigit(static_cast<unsigned char>(ch))) {
+    }
+
+    // `ch` now holds the first non‑whitespace character
+    if (std::isdigit(static_cast<unsigned char>(ch))) {
         token.type = Token::NUMBER;
         token.value += ch;
+        // consume remaining digits
         while (readFile.get(ch) && std::isdigit(static_cast<unsigned char>(ch))) {
             token.value += ch;
         }
-        readFile.unget(); // Put back the last character that is not a digit
+        if (readFile) {
+            readFile.unget(); // put back non‑digit
+        }
     } else if (std::islower(static_cast<unsigned char>(ch))) {
         token.type = Token::IDENTIFIER;
         token.value += ch;
-        while (readFile.get(ch) && (std::islower(static_cast<unsigned char>(ch)))) {
+        while (readFile.get(ch) && std::islower(static_cast<unsigned char>(ch))) {
             token.value += ch;
         }
-        readFile.unget(); // Put back the last character that is not part of an identifier
+        if (readFile) {
+            readFile.unget(); // put back non‑identifier char
+        }
     } else {
+        token.value = ch;
         switch (ch) {
-            case '+':
-                token.type = Token::ADD;
-                break;
-            case '-':
-                token.type = Token::SUBTRACT;
-                break;
-            case '*':
-                token.type = Token::MULTIPLY;
-                break;
-            case '/':
-                token.type = Token::DIVIDE;
-                break;
-            case '(':
-                token.type = Token::LPAREN;
-                break;
-            case ')':
-                token.type = Token::RPAREN;
-                break;
+            case '+': token.type = Token::ADD; break;
+            case '-': token.type = Token::SUBTRACT; break;
+            case '*': token.type = Token::MULTIPLY; break;
+            case '/': token.type = Token::DIVIDE; break;
+            case '(': token.type = Token::LPAREN; break;
+            case ')': token.type = Token::RPAREN; break;
             default:
                 token.type = Token::ERROR; // Unrecognized character
                 break;
         }
     }
-    // Skip whitespace
-    while (readFile.get(ch) && isspace(static_cast<unsigned char>(ch))) {
-        // Do nothing, just skip whitespace
-        }
-    readFile.unget(); // Put back the last character that is not whitespace
 
     return token;
 }

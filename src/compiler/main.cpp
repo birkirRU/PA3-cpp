@@ -8,26 +8,34 @@ int main(int argc, char* argv[]) {
     std::string inputFile;
     std::string writeFile;
 
-    // Maybe later error handling no arguments
-    if (argc == 1) {
-        return 0;
-    }
-    // if there is only one argument, read expression from standard input
-    else if (argc == 2) {
+    if (argc <= 1) {
+        // no arguments, fall back to default example file
+        inputFile = "src/expressions/input.txt";
+    } else if (argc == 2) {
+        // Yet to be implamented 
 
     } else if (argc == 3) {
-        // If there are three arguments, the first is the AST output file name and the second is the input file name
         writeFile = argv[1];
         inputFile = argv[2];
-    } else {
-        // If there are more than three arguments, return an error code
-        return 1;
     }
 
-    // Prepend the path to the input file, the assumption that the cwd is the root of the project
+    else {
+        // Yet to be implemnted
+    }
+
+    // The PROGRAM must be run from ROOT, where input file has to exist in 'expressions' folder
+    // The name of the write file will always be written to 'ast' folder.
     inputFile = "src/expressions/" + inputFile;
+
     Lexer lexer(inputFile);
     std::vector<Token> tokens = lexer.tokenize();
+
+    // debug: print tokens to stdout so we can see the lexer's output
+    for (const Token &t : tokens) {
+        std::cout << "token type=" << t.type;
+        if (!t.value.empty()) std::cout << " value='" << t.value << "'";
+        std::cout << '\n';
+    }
 
     // Parser parser(tokens);
     // ASTNode* ast = parser.parse();
