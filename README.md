@@ -1,6 +1,10 @@
 # PA3-cpp
 
 
+### Lexer
+
+Skips whitespaces
+
 ### Grammar
 ```
 expression := term ((+|-) term)*
