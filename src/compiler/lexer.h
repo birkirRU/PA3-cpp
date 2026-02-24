@@ -5,7 +5,6 @@
 #include <cctype>
 
 
-
 struct Token {
     static const int NUMBER = 1;
     static const int IDENTIFIER = 2;

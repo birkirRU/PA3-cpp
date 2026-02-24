@@ -1,4 +1,3 @@
-
 #include "lexer.h"
 #include "ast.h"
 #include "parcer.h"
@@ -33,12 +32,14 @@ int main(int argc, char* argv[]) {
     // debug: print tokens to stdout so we can see the lexer's output
     for (const Token &t : tokens) {
         std::cout << "token type=" << t.type;
-        if (!t.value.empty()) std::cout << " value='" << t.value << "'";
+        std::cout << " value='" << t.value << "'";
         std::cout << '\n';
     }
 
-    // Parser parser(tokens);
-    // ASTNode* ast = parser.parse();
+    Parser parser(tokens);
+    parser.buildST();
+
+    
 
     // // Clean up the AST
     // delete ast;
