@@ -4,18 +4,6 @@
 #include "lexer.h"
 #include "memory"
 
-class ASTtree {
-    std::unique_ptr<ASTnode> root;
-    std::ofstream& stream;
-
-    public:
-        ASTtree(std::unique_ptr<ASTnode>&& root, std::ofstream& stream);
-        // No need for destructor since unique_ptr will automatically clean up the tree
-
-        void outputTree(const std::string& ofilename);
-        void _outputTree(const std::unique_ptr<ASTnode>& current_node) const;
-};
-
 class ASTnode {
     public:
         virtual ~ASTnode() = default;
@@ -58,5 +46,19 @@ class BinaryOp: public ASTnode {
 };
 
 // No need for parenthises since, the structure of the tree cover it
+
+
+class ASTtree {
+    std::unique_ptr<ASTnode> root;
+    std::ofstream& stream;
+
+    public:
+        ASTtree(std::unique_ptr<ASTnode>&& root, std::ofstream& stream);
+        // No need for destructor since unique_ptr will automatically clean up the tree
+
+        void outputTree(const std::string& ofilename);
+        void _outputTree(const std::unique_ptr<ASTnode>& current_node) const;
+};
+
 
 #endif // COMPILER_AST_H

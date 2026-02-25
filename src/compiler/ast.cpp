@@ -25,7 +25,7 @@ void ASTtree::_outputTree(const std::unique_ptr<ASTnode>& current_node) const {
 
 }
 
-ASTnode::~ASTnode() {}
+// ASTnode::~ASTnode() {}
 
 void ASTnode::output(std::ofstream& s) const {}
 
@@ -55,7 +55,9 @@ BinaryOp::BinaryOp(const Token& op, std::unique_ptr<ASTnode> l, std::unique_ptr<
 void BinaryOp::output(std::ofstream & s) const {
     s << '(';
     s << op.value;
+    s << ' ';
     left->output(s);
+    s << ' ';
     right->output(s);
     s << ')';
 }

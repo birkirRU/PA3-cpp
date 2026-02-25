@@ -20,7 +20,7 @@ std::unique_ptr<ASTnode> Parser::_expr() {
         currToken = tokens[curr_token];
         _nextToken();
         std::unique_ptr<ASTnode> right = _term(); 
-        node = std::make_unique<BinaryOp>(currToken, node, right);
+        node = std::make_unique<BinaryOp>(currToken, std::move(node), std::move(right));
     }
     return node;
 }
@@ -33,7 +33,7 @@ std::unique_ptr<ASTnode> Parser::_term() {
         currToken = tokens[curr_token];
         _nextToken();
         std::unique_ptr<ASTnode> right = _factor(); 
-        node = std::make_unique<BinaryOp>(currToken, node, right);
+        node = std::make_unique<BinaryOp>(currToken, std::move(node), std::move(right));
     }
     return node;
 }
@@ -54,7 +54,7 @@ std::unique_ptr<ASTnode> Parser::_factor() {
     }
     else if (currToken.type == Token::SUBTRACT) {
         _nextToken();
-        node = std::make_unique<UnaryOp>(_factor());
+        node = std::make_unique<UnaryOp>(currToken, std::move(_factor()));
     }
     else if (currToken.type == Token::LPAREN) {
         _nextToken();
