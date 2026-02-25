@@ -1,3 +1,6 @@
+#ifndef COMPILER_PARCER_H
+#define COMPILER_PARCER_H
+
 #include <string> 
 #include <iostream>
 #include <fstream>
@@ -8,16 +11,18 @@
 #include "ast.h"
 
 class Parser {
-    std::unique_ptr<ASTnode> ast_root;
     std::vector<Token> tokens;
     uint curr_token;
     public:
         Parser(const std::vector<Token>& tokens);
 
-        void buildST();
+        std::unique_ptr<ASTnode> buildST();
     private:
         std::unique_ptr<ASTnode> _expr();
         std::unique_ptr<ASTnode> _term();
         std::unique_ptr<ASTnode> _factor();
         void _nextToken();
 };
+
+
+#endif // COMPILER_PARCER_H

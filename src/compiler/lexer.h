@@ -1,3 +1,6 @@
+#ifndef COMPILER_LEXER_H
+#define COMPILER_LEXER_H
+
 #include <string> 
 #include <iostream>
 #include <fstream>
@@ -31,3 +34,6 @@ class Lexer {
     private:
         Token consume();
 };
+
+
+#endif // COMPILER_LEXER_H

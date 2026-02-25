@@ -7,8 +7,9 @@ Parser::Parser(const std::vector<Token>& tokens)
 
 void Parser::_nextToken() {curr_token += 1;}
 
-void Parser::buildST() {
-    ast_root = _expr();
+std::unique_ptr<ASTnode> Parser::buildST() {
+    std::unique_ptr<ASTnode> ast_root = _expr();
+    return ast_root;
 }
 
 std::unique_ptr<ASTnode> Parser::_expr() {

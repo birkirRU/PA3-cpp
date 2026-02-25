@@ -37,9 +37,14 @@ int main(int argc, char* argv[]) {
     }
 
     Parser parser(tokens);
-    parser.buildST();
+    std::unique_ptr<ASTnode> root = parser.buildST();
 
-    
+    std::ofstream stream;
+    ASTtree tree(std::move(root), stream);
+
+    writeFile = "src/ast/" + writeFile;
+    tree.outputTree(writeFile);
+
 
     // // Clean up the AST
     // delete ast;
