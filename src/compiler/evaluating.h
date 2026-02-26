@@ -5,7 +5,7 @@
 #include <iostream>
 #include "lexer.h"
 
-int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::string, int64_t> vars = {}) {
+int64_t express(const std::vector<Token>& lis, int& num, std::unordered_map<std::string, int64_t> vars = {}) {
 
     if (lis[num].type == Token::LPAREN) {
         num++;
@@ -37,11 +37,17 @@ int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::str
         int64_t left  = express(lis, num, vars);
         int64_t right = express(lis, num, vars);
         num++;  
+
+        if (right == 0) {
+            throw std::runtime_error("Cannot divide with zero!");
+        }
+
         return left / right;
     }
 
     else if (lis[num].type == Token::IDENTIFIER) {
-        return vars[lis[num++].value];
+        return vars.at(lis[num++].value);
+
     }
 
     else if (lis[num].type == Token::MULTIPLY) {
@@ -60,9 +66,15 @@ int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::str
 std::unordered_map<std::string, int64_t> load_variables(std::string filename) {
     std::unordered_map<std::string, int64_t> variables;
     std::ifstream inputFile(filename);
+
+    if (inputFile.fail()) {
+        throw std::runtime_error("Could not open file: " + filename);
+    }
+
     std::string line;
 
     while (std::getline(inputFile, line)) {
+
         int equal = line.find('=');
 
         std::string name  = line.substr(0, equal);
