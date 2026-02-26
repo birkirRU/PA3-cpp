@@ -1,8 +1,11 @@
 #include <vector>
 #include <string>
+#include <unordered_map>
+#include <fstream>
+#include <iostream>
 #include "lexer.h"
 
-int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::string, int64_t>& vars) {
+int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::string, int64_t> vars = {}) {
 
     if (lis[num].type == Token::LPAREN) {
         num++;
@@ -10,7 +13,7 @@ int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::str
     }
     else if (lis[num].type == Token::ADD) {
         num++;                            
-        int64_t left  = express(lis, num, vars);  
+        int64_t left  = express(lis, num, vars);
         int64_t right = express(lis, num, vars);
         num++; 
         return left + right;
@@ -27,6 +30,14 @@ int express(const std::vector<Token>& lis, int& num, std::unordered_map<std::str
         int64_t right = express(lis, num, vars);
         num++;  
         return left - right; 
+    }
+
+    else if (lis[num].type == Token::DIVIDE) {
+        num++;
+        int64_t left  = express(lis, num, vars);
+        int64_t right = express(lis, num, vars);
+        num++;  
+        return left / right;
     }
 
     else if (lis[num].type == Token::IDENTIFIER) {

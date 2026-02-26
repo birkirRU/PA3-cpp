@@ -9,7 +9,6 @@ int main(int argc, char* argv[]) {
     std::string varFile;
 
     if (argc == 2) {
-        // no arguments, fall back to default example file
         inputFile = "src/ast/" + std::string(argv[1]);
         Lexer lexer2(inputFile);
         std::vector<Token> tokens2 = lexer2.tokenize();
@@ -28,12 +27,6 @@ int main(int argc, char* argv[]) {
     else {
         // Yet to be implemnted
     }
-
-   
-
-    
-
-
 
     // // Clean up the AST
     // delete ast;
