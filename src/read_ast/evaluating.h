@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <fstream>
 #include <iostream>
-#include "lexer.h"
 
 void check_overflow(int64_t left, int64_t right, int operators) {
     if (operators == 1) {

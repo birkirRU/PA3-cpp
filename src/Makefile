@@ -3,7 +3,7 @@ EVAL = compiler/evaluation
 # source files live under src/compiler; compiler.cpp was removed so only list existing .cpp files
 COMP_FILES = compiler/main.cpp compiler/ast.cpp compiler/lexer.cpp compiler/parcer.cpp
 # evaluator appears not implemented yet; leave empty or use placeholder
-EVAL_FILES = 
+EVAL_FILES = read_ast/main.cpp compiler/lexer.cpp
 
 CXXFLAGS = -Wall -Wextra -O0 -g3 -fno-omit-frame-pointer -D_GLIBXX_DEBUG
 
