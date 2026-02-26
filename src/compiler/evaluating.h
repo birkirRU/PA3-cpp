@@ -5,6 +5,42 @@
 #include <iostream>
 #include "lexer.h"
 
+void check_overflow(int64_t left, int64_t right, int operators) {
+    if (operators == 1) {
+        if (right > 0 && left > INT64_MAX - right) {
+            throw std::runtime_error("Overflow detected!");
+        };
+        if (right < 0 && left < INT64_MIN - right) {
+            throw std::runtime_error("Overflow detected!");
+        }
+    }
+
+    else if (operators == 2) {
+        if (right < 0 && left > INT64_MAX + right) {
+            throw std::runtime_error("Overflow detected!");
+        };
+        if (right > 0 && left < INT64_MIN + right) {
+            throw std::runtime_error("Overflow detected!");
+        }
+    }
+
+    else if (operators == 3) {
+        if (right != 0 && left > INT64_MAX / right) {
+            throw std::runtime_error("Overflow detected!");
+        };
+        if (right != 0 && left < INT64_MIN / right) {
+            throw std::runtime_error("Overflow detected!");
+        }
+        if (left > 0 && right < 0 && right < INT64_MIN / left) {throw std::runtime_error("Overflow detected!");}
+        if (left < 0 && right > 0 && left < INT64_MIN / right) {throw std::runtime_error("Overflow detected!");}
+    }
+
+    else if (operators == 4) {
+       if (right == -1 && left == INT64_MIN) {
+            throw std::runtime_error("Overflow detected!");}
+        }
+    }
+
 int64_t express(const std::vector<Token>& lis, int& num, std::unordered_map<std::string, int64_t> vars = {}) {
 
     if (lis[num].type == Token::LPAREN) {
@@ -15,7 +51,8 @@ int64_t express(const std::vector<Token>& lis, int& num, std::unordered_map<std:
         num++;                            
         int64_t left  = express(lis, num, vars);
         int64_t right = express(lis, num, vars);
-        num++; 
+        num++;
+        check_overflow(left,right,1); 
         return left + right;
     }
     else if (lis[num].type == Token::SUBTRACT) {
@@ -28,7 +65,8 @@ int64_t express(const std::vector<Token>& lis, int& num, std::unordered_map<std:
         }
 
         int64_t right = express(lis, num, vars);
-        num++;  
+        num++;
+        check_overflow(left,right,2);   
         return left - right; 
     }
 
@@ -41,7 +79,7 @@ int64_t express(const std::vector<Token>& lis, int& num, std::unordered_map<std:
         if (right == 0) {
             throw std::runtime_error("Cannot divide with zero!");
         }
-
+        check_overflow(left,right,4); 
         return left / right;
     }
 
@@ -54,7 +92,8 @@ int64_t express(const std::vector<Token>& lis, int& num, std::unordered_map<std:
         num++;
         int64_t left  = express(lis, num, vars);
         int64_t right = express(lis, num, vars);
-        num++;  
+        num++;
+        check_overflow(left,right,3);   
         return left * right;
     }
     else if (lis[num].type == Token::NUMBER) {
