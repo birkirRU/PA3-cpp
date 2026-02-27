@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 
@@ -13,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     if (argc <= 1) {
         // no arguments, fall back to default example file
-        inputFile = "src/expressions/input.txt";
+        argc = 2;
     } else if (argc == 2) {
         // one argument: output file, read expression from stdin
         writeFile = argv[1];
@@ -53,6 +54,14 @@ int main(int argc, char* argv[]) {
     // The name of the write file will always be written to 'ast' folder.
     inputFile = "src/expressions/" + inputFile;
 
+    {
+        std::ifstream check(inputFile);
+        if (!check) {
+            std::cerr << "Could not open input file: " << inputFile << "\n";
+            return 1;
+        }
+    }
+
     Lexer lexer(inputFile);
     std::vector<Token> tokens = lexer.tokenize();
 
@@ -63,15 +72,25 @@ int main(int argc, char* argv[]) {
         std::cout << '\n';
     }
 
-    Parser parser(tokens);
-    std::unique_ptr<ASTnode> root = parser.buildST();
+    std::unique_ptr<ASTnode> root;
+    try {
+        Parser parser(tokens);
+        root = parser.buildST();
+    } catch (const std::exception& e) {
+        std::cerr << "Parse error: " << e.what() << "\n";
+        return 1;
+    }
 
     std::ofstream stream;
     ASTtree tree(std::move(root), stream);
 
     writeFile = "src/ast/" + writeFile;
-    tree.outputTree(writeFile);
-
+    try {
+        tree.outputTree(writeFile);
+    } catch (const std::exception& e) {
+        std::cerr << "Could not write AST file: " << e.what() << "\n";
+        return 1;
+    }
 
     // // Clean up the AST
     // delete ast;

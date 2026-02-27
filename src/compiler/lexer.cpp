@@ -1,8 +1,12 @@
 #include "lexer.h"
+#include <stdexcept>
 
 Lexer::Lexer(const std::string& filename) {
     // Open the file and prepare for tokenization
     readFile.open(filename);
+    if (!readFile) {
+        throw std::runtime_error("Could not open file: " + filename);
+    }
 }
 
 Lexer::~Lexer() {
@@ -66,10 +70,13 @@ Token Lexer::consume() {
 
 std::vector<Token> Lexer::tokenize() {
     std::vector<Token> tokens;
-    // Tokenize the input file and populate the tokens vector
     while (true) {
         Token token = consume();
-        if (token.type == Token::ERROR) break;
+        if (token.type == Token::ERROR) {
+            // Push ERROR so parser can report the invalid character, then stop
+            tokens.push_back(token);
+            break;
+        }
         tokens.push_back(token);
     }
     tokens.push_back({Token::END, ""});

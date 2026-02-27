@@ -1,11 +1,14 @@
-
 #include "ast.h"
+#include <stdexcept>
 
 ASTtree::ASTtree(std::unique_ptr<ASTnode>&& root, std::ofstream& stream) : root(std::move(root)), stream(stream) {}
 
 
 void ASTtree::outputTree(const std::string& ofilename) {
     stream.open(ofilename);
+    if (!stream) {
+        throw std::runtime_error("Could not open file for writing: " + ofilename);
+    }
     _outputTree(root);
     stream.close();
 }

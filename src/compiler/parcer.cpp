@@ -43,6 +43,10 @@ std::unique_ptr<ASTnode> Parser::_term() {
 std::unique_ptr<ASTnode> Parser::_factor() {
     std::unique_ptr<ASTnode> node;
 
+    if (curr_token >= tokens.size()) {
+        throw std::runtime_error("Unexpected end of input");
+    }
+
     // std::make_unique initializes Class on heap, and creates unique pointer, moved to node
     Token currToken = tokens[curr_token];
     if (currToken.type == Token::NUMBER) {
@@ -55,16 +59,25 @@ std::unique_ptr<ASTnode> Parser::_factor() {
     }
     else if (currToken.type == Token::SUBTRACT) {
         _nextToken();
-        node = std::make_unique<UnaryOp>(currToken, std::move(_factor()));
+        std::unique_ptr<ASTnode> factor = _factor();
+        node = std::make_unique<UnaryOp>(currToken, std::move(factor));
     }
     else if (currToken.type == Token::LPAREN) {
         _nextToken();
         node = _expr();
-        if (tokens[curr_token].type == Token::RPAREN) {
-            _nextToken();
-        } else {
+        if (curr_token >= tokens.size() || tokens[curr_token].type != Token::RPAREN) {
             throw std::runtime_error("Missing ')'");
         }
+        _nextToken();
+    }
+    else {
+        if (currToken.type == Token::ERROR) {
+            if (currToken.value.empty()) {
+                throw std::runtime_error("Unexpected end of input");
+            }
+            throw std::runtime_error("Unexpected character: " + currToken.value);
+        }
+        throw std::runtime_error("Unexpected token in expression");
     }
 
     return node;
