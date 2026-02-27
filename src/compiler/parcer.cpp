@@ -1,5 +1,6 @@
 #include "parcer.h"
 #include "ast.h"
+#include <stdexcept>
 
 Parser::Parser(const std::vector<Token>& tokens)
     : tokens(tokens), curr_token(0) {}
@@ -59,8 +60,10 @@ std::unique_ptr<ASTnode> Parser::_factor() {
     else if (currToken.type == Token::LPAREN) {
         _nextToken();
         node = _expr();
-        if (currToken.type == Token::RPAREN) {
+        if (tokens[curr_token].type == Token::RPAREN) {
             _nextToken();
+        } else {
+            throw std::runtime_error("Missing ')'");
         }
     }
 
