@@ -15,20 +15,8 @@ void ASTtree::outputTree(const std::string& ofilename) {
 
 void ASTtree::_outputTree(const std::unique_ptr<ASTnode>& current_node) const {
     current_node->output(stream);
-//     if (typeid(current_node) == typeid(Number)) {
-        
-
-
-//     } else if (typeid(current_node) == typeid(Variable)) {
-
-//     } else if (typeid(current_node) == typeid(BinaryOp)) {
-
-//     } else if (typeid(current_node) == typeid(UnaryOp)) {
-// }
-
 }
 
-// ASTnode::~ASTnode() {}
 
 void ASTnode::output(std::ofstream& s) const { (void)s; }
 
