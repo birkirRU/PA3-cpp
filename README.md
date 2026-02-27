@@ -10,21 +10,22 @@ Expression compiler and evaluator: Part 1 builds an AST from an expression and w
 
 ### Build
 
+From the **project root**:
+
 ```bash
-cd src
-make all
+make -C src all
+```
+
+Or:
+
+```bash
+cd src && make all
 ```
 
 This builds two binaries:
 
 - `src/compiler/compilation` — Part 1 (expression → AST file)
 - `src/compiler/evaluation` — Part 2 (AST file → value)
-
-From the project root you can also run:
-
-```bash
-cd src && make all && cd ..
-```
 
 ### Part 1: Compile expression to AST
 
@@ -35,12 +36,12 @@ Run from the **project root**.
   ./src/compiler/compilation <ast_output> <expression_input>
   ```
   The expression is read from `src/expressions/<expression_input>`. The AST is written to `src/ast/<ast_output>`.
-- **One argument** (output AST file only): the expression is read from **stdin**.
+- **One argument** (output AST file only): the expression is read from **stdin**. Type the expression, then press **Ctrl+D** (Unix/macOS) or **Ctrl+Z** (Windows) to send it.
   ```bash
   ./src/compiler/compilation result.ast
-  2+7*(1+3+4*2) ctrl d
+  2+7*(1+3+4*2)
   ```
-  The program writes stdin to `src/expressions/stdin_input.txt` and then parses it, to write to std in, press ´ctrl d´ after typing expression.
+  The program writes stdin to `src/expressions/stdin_input.txt` and then parses it.
 - **No arguments**: uses the default expression file `src/expressions/input.txt` and writes the AST to `src/ast/output.txt`.
 
 Example (two arguments):
@@ -55,19 +56,19 @@ Run from the **project root**.
 
 - **One argument** (AST file): evaluate the AST and print the result. No variables.
   ```bash
-  ./src/read_ast/evaluation result.ast
+  ./src/compiler/evaluation result.ast
   ```
   The program reads the AST from `src/ast/<ast_file>`.
 - **Two arguments** (AST file and `var`): same as above, but variables are taken from the fixed file `src/read_ast/vars.txt` (format: one line per variable, `name=value`, e.g. `x=7`).
   ```bash
-  ./src/read_ast/evaluation result.ast var
+  ./src/compiler/evaluation result.ast var
   ```
   The second argument must be exactly `var`; any other second argument is rejected.
 
 Example with variables:
 
 ```bash
-./src/read_ast/evaluation result.ast var
+./src/compiler/evaluation result.ast var
 ```
 
 ---
@@ -151,6 +152,18 @@ factor      :=  NUMBER
 
 - Reads the AST file and tokenizes it with the same lexer, then evaluates the token stream as a **prefix expression**: after `(`, the next token is the operator (or unary `-`), followed by the operands. Recursive evaluation with a single index into the token list yields the result.
 - Variables are looked up in a map loaded from `src/read_ast/vars.txt` when the second argument is `var`. Division uses C++ integer division; overflow is checked for 64-bit signed arithmetic.
+
+---
+
+## Example run (using included files)
+
+The hand-in includes these example files: `src/expressions/input.txt` (expression `2+7*(1+3+4*2)`), `src/ast/output.txt` (pre-built AST for that expression), and `src/read_ast/vars.txt`. To build and run the full pipeline with these examples, from the project root:
+
+```bash
+make -C src all && ./src/compiler/compilation && ./src/compiler/evaluation output.txt
+```
+
+This compiles the default expression to AST, then evaluates it. Output: `86`.
 
 ---
 

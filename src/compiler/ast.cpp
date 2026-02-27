@@ -30,7 +30,7 @@ void ASTtree::_outputTree(const std::unique_ptr<ASTnode>& current_node) const {
 
 // ASTnode::~ASTnode() {}
 
-void ASTnode::output(std::ofstream& s) const {}
+void ASTnode::output(std::ofstream& s) const { (void)s; }
 
 Number::Number(Token value) : value(value) {}
 

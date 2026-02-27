@@ -53,7 +53,9 @@ int main(int argc, char* argv[]) {
 
     // The PROGRAM must be run from ROOT, where input file has to exist in 'expressions' folder
     // The name of the write file will always be written to 'ast' folder.
-    inputFile = "src/expressions/" + inputFile;
+    if (inputFile.find("src/expressions/") != 0) {
+        inputFile = "src/expressions/" + inputFile;
+    }
 
     {
         std::ifstream check(inputFile);
