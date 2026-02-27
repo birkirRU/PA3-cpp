@@ -9,6 +9,7 @@
 
 
 struct Token {
+    static const int END = 0;
     static const int NUMBER = 1;
     static const int IDENTIFIER = 2;
     static const int ADD = 3;

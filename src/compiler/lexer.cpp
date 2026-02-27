@@ -67,11 +67,11 @@ Token Lexer::consume() {
 std::vector<Token> Lexer::tokenize() {
     std::vector<Token> tokens;
     // Tokenize the input file and populate the tokens vector
-    while (!readFile.eof()) {
+    while (true) {
         Token token = consume();
-        if (token.type != Token::ERROR) {
-            tokens.push_back(token);
-        }
+        if (token.type == Token::ERROR) break;
+        tokens.push_back(token);
     }
+    tokens.push_back({Token::END, ""});
     return tokens;
 }
