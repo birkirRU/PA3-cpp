@@ -14,7 +14,8 @@ int main(int argc, char* argv[]) {
 
     if (argc <= 1) {
         // no arguments, fall back to default example file
-        argc = 2;
+        inputFile = "src/expressions/input.txt";
+        writeFile = "output.txt";
     } else if (argc == 2) {
         // one argument: output file, read expression from stdin
         writeFile = argv[1];
@@ -65,12 +66,6 @@ int main(int argc, char* argv[]) {
     Lexer lexer(inputFile);
     std::vector<Token> tokens = lexer.tokenize();
 
-    // debug: print tokens to stdout so we can see the lexer's output
-    for (const Token &t : tokens) {
-        std::cout << "token type=" << t.type;
-        std::cout << " value='" << t.value << "'";
-        std::cout << '\n';
-    }
 
     std::unique_ptr<ASTnode> root;
     try {
@@ -91,10 +86,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "Could not write AST file: " << e.what() << "\n";
         return 1;
     }
-
-    // // Clean up the AST
-    // delete ast;
-
     return 0;
 
 }
